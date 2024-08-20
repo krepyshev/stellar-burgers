@@ -22,15 +22,40 @@ const App = () => (
       <Route path='/' element={<ConstructorPage />} />
       <Route path='/feed' element={<Feed />} />
 
-      <Route path='/login' element={<Login />} />
-      <Route path='/register' element={<Register />} />
-      <Route path='/forgot-password' element={<ForgotPassword />} />
-      <Route path='/reset-password' element={<ResetPassword />} />
+      <Route
+        path='/login'
+        element={
+          <ProtectedRoute>
+            <Login />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path='/register'
+        element={
+          <ProtectedRoute>
+            <Register />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path='/forgot-password'
+        element={
+          <ProtectedRoute>
+            <ForgotPassword />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path='/reset-password'
+        element={
+          <ProtectedRoute>
+            <ResetPassword />
+          </ProtectedRoute>
+        }
+      />
 
-      <Route path='/profile' element={<Profile />} />
-      <Route path='/profile/orders' element={<ProfileOrders />} />
-
-      {/* <Route
+      <Route
         path='/profile'
         element={
           <ProtectedRoute>
@@ -45,7 +70,7 @@ const App = () => (
             <ProfileOrders />
           </ProtectedRoute>
         }
-      /> */}
+      />
 
       <Route path='*' element={<NotFound404 />} />
 

@@ -1,34 +1,20 @@
-import { Preloader } from '@ui';
 import React from 'react';
-import { Navigate, useLocation } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { Outlet, Navigate } from 'react-router-dom';
+import { RootState } from '../../services/store';
 
-interface ProtectedRouteProps {
-  onlyUnAuth: React.ReactNode;
-  children: React.ReactNode;
-}
+type ProtectedRouteProps = {
+  children: JSX.Element;
+};
 
-const ProtectedRoute = ({
-  onlyUnAuth = false,
-  children
-}: ProtectedRouteProps) => {
-  const isAuthChecked = false;
-  const user = null;
-  const location = useLocation();
+const ProtectedRoute: React.FC<ProtectedRouteProps> = () => {
+  const { isAuthenticated } = useSelector((store: RootState) => store.user);
 
-  if (!isAuthChecked) {
-    return <Preloader />;
+  if (!isAuthenticated) {
+    return <Navigate to='/login' />;
   }
 
-  if (onlyUnAuth && user) {
-    const { from } = location.state || { from: { pathname: '/' } };
-    return <Navigate to={from} />;
-  }
-
-  if (!onlyUnAuth && !user) {
-    return <Navigate to='/login' state={{ from: location }} />;
-  }
-
-  return children;
+  return <Outlet />;
 };
 
 export default ProtectedRoute;
