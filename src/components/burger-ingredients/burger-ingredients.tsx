@@ -6,11 +6,6 @@ import { BurgerIngredientsUI } from '../ui/burger-ingredients';
 import { useSelector } from '../../services/store';
 
 export const BurgerIngredients: FC = () => {
-  // /** TODO: взять переменные из стора */
-  // const buns = [];
-  // const mains = [];
-  // const sauces = [];
-
   const { items } = useSelector((state) => state.ingredients);
 
   const buns: TIngredient[] = useMemo(

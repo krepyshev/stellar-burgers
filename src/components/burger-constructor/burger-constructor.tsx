@@ -1,26 +1,37 @@
-import { FC, useMemo } from 'react';
+import { FC, useEffect, useMemo } from 'react';
 import { TConstructorIngredient } from '@utils-types';
 import { BurgerConstructorUI } from '@ui';
-import { useSelector } from '../../services/store';
+import { RootState, useDispatch, useSelector } from '../../services/store';
 
 export const BurgerConstructor: FC = () => {
+  console.log('Burger constructor mounted:');
   /** TODO: взять переменные constructorItems, orderRequest и orderModalData из стора */
 
+  // Получаем данные из стора
+  const bun = useSelector((state: RootState) => state.constructor.bun);
+  const ingredients = useSelector(
+    (state: RootState) => state.constructor.ingredients
+  );
+
+  console.log(bun);
+  console.log(ingredients);
+
+  const constructorState = useSelector((state: RootState) => state.constructor);
+
+  // Логирование состояния
+  console.log('Constructor State:', constructorState);
+
   const constructorItems = {
-    bun: {
-      price: 0
-    },
-    ingredients: []
+    bun: constructorState.bun || { price: 0, name: '', image: '' },
+    ingredients: constructorState.ingredients || []
   };
 
-  // const constructorItems = useSelector((state) => state.constructor);
+  // Проверка данных конструкторских элементов
+  console.log('Constructor Items:', constructorItems);
 
   const orderRequest = false;
 
   const orderModalData = null;
-
-  // const orderRequest = useSelector((state) => state.order.orderRequest);
-  // const orderModalData = useSelector((state) => state.order.orderModalData);
 
   const onOrderClick = () => {
     if (!constructorItems.bun || orderRequest) return;

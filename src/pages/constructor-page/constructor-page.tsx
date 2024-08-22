@@ -9,7 +9,9 @@ import { FC, useEffect } from 'react';
 import { fetchIngredients } from '../../services/slices/ingredientsSlice';
 
 export const ConstructorPage: FC = () => {
-  const { isLoading, hasError } = useSelector((state) => state.ingredients);
+  const isIngredientsLoading = useSelector(
+    (state) => state.ingredients.isLoading
+  );
 
   const dispatch = useDispatch();
 
@@ -17,13 +19,9 @@ export const ConstructorPage: FC = () => {
     dispatch(fetchIngredients());
   }, [dispatch]);
 
-  if (hasError) {
-    return <p>Произошла ошибка при загрузке ингредиентов</p>;
-  }
-
   return (
     <>
-      {isLoading ? (
+      {isIngredientsLoading ? (
         <Preloader />
       ) : (
         <main className={styles.containerMain}>
