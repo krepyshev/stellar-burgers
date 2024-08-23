@@ -13,7 +13,7 @@ import {
 
 const rootReducer = combineReducers({
   ingredients: ingredientsReducer,
-  constructor: constructorReducer,
+  burgerConstructor: constructorReducer,
   user: userReducer,
   order: orderReducer,
   feed: feedReducer

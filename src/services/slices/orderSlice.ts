@@ -1,42 +1,80 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { TOrder } from '../../utils/types';
+import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
+import { TOrder } from '@utils-types';
+import { orderBurgerApi, getOrderByNumberApi } from '../../utils/burger-api';
 
 interface OrderState {
-  order: TOrder | null;
-  orderRequest: boolean;
-  orderError: string | null;
+  currentOrder: TOrder | null;
+  isLoading: boolean;
+  error: string | null;
 }
 
 const initialState: OrderState = {
-  order: null,
-  orderRequest: false,
-  orderError: null
+  currentOrder: null,
+  isLoading: false,
+  error: null
 };
+
+export const fetchOrderByNumber = createAsyncThunk(
+  'order/fetchOrderByNumber',
+  async (orderNumber: number) => {
+    const data = await getOrderByNumberApi(orderNumber);
+    return data.orders[0];
+  }
+);
+
+export const createOrder = createAsyncThunk(
+  'order/createOrder',
+  async (ingredientsIds: string[]) => {
+    const data = await orderBurgerApi(ingredientsIds);
+    return data.order;
+  }
+);
 
 const orderSlice = createSlice({
   name: 'order',
   initialState,
   reducers: {
-    orderRequest(state) {
-      state.orderRequest = true;
-      state.orderError = null;
-    },
-    orderSuccess(state, action: PayloadAction<TOrder>) {
-      state.orderRequest = false;
-      state.order = action.payload;
-    },
-    orderFailure(state, action: PayloadAction<string>) {
-      state.orderRequest = false;
-      state.orderError = action.payload;
-    },
     clearOrder(state) {
-      state.order = null;
-      state.orderRequest = false;
-      state.orderError = null;
+      state.currentOrder = null;
+      state.error = null;
     }
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchOrderByNumber.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(
+        fetchOrderByNumber.fulfilled,
+        (state, action: PayloadAction<TOrder>) => {
+          state.isLoading = false;
+          state.currentOrder = action.payload;
+        }
+      )
+      .addCase(fetchOrderByNumber.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error =
+          action.error.message || 'Не удалось получить информацию о заказе';
+      })
+      .addCase(createOrder.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(
+        createOrder.fulfilled,
+        (state, action: PayloadAction<TOrder>) => {
+          state.isLoading = false;
+          state.currentOrder = action.payload;
+        }
+      )
+      .addCase(createOrder.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.error.message || 'Не удалось оформить заказ';
+      });
   }
 });
 
-export const { orderRequest, orderSuccess, orderFailure, clearOrder } =
-  orderSlice.actions;
+export const { clearOrder } = orderSlice.actions;
+
 export default orderSlice.reducer;

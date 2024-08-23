@@ -4,12 +4,14 @@ import { TIngredient } from '@utils-types';
 
 interface IngredientState {
   items: TIngredient[];
+  currentIngredient: TIngredient | null;
   isLoading: boolean;
   hasError: boolean;
 }
 
 const initialState: IngredientState = {
   items: [],
+  currentIngredient: null,
   isLoading: false,
   hasError: false
 };
@@ -29,7 +31,11 @@ export const fetchIngredients = createAsyncThunk<TIngredient[], void>(
 const ingredientsSlice = createSlice({
   name: 'ingredients',
   initialState,
-  reducers: {},
+  reducers: {
+    setCurrentIngredient(state, action) {
+      state.currentIngredient = action.payload;
+    }
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchIngredients.pending, (state) => {
@@ -46,5 +52,7 @@ const ingredientsSlice = createSlice({
       });
   }
 });
+
+export const { setCurrentIngredient } = ingredientsSlice.actions;
 
 export default ingredientsSlice.reducer;

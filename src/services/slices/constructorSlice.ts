@@ -30,7 +30,7 @@ export const fetchIngredients = createAsyncThunk(
 );
 
 const constructorSlice = createSlice({
-  name: 'constructor',
+  name: 'burgerConstructor',
   initialState,
   reducers: {
     addIngredient: {
@@ -44,8 +44,7 @@ const constructorSlice = createSlice({
       prepare: (ingredient: TIngredient) => ({
         payload: {
           ...ingredient,
-          uniqueId: nanoid(),
-          id: ingredient._id
+          id: nanoid()
         }
       })
     },
@@ -82,7 +81,6 @@ const constructorSlice = createSlice({
           state.isLoading = false;
           state.ingredients = action.payload.map((ingredient) => ({
             ...ingredient,
-            uniqueId: nanoid(),
             id: ingredient._id
           }));
         }
