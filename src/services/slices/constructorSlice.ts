@@ -1,17 +1,35 @@
-import { createSlice, PayloadAction, nanoid } from '@reduxjs/toolkit';
-import { TConstructorIngredient, TIngredient } from '../../utils/types';
+import {
+  createSlice,
+  PayloadAction,
+  nanoid,
+  createAsyncThunk
+} from '@reduxjs/toolkit';
+import { TIngredient, TConstructorIngredient } from '@utils-types';
+import { getIngredientsApi } from '@api';
 
-type TStateConstructor = {
-  bun: TIngredient | null;
-  ingredients: Array<TConstructorIngredient>;
-};
+interface ConstructorState {
+  bun: TConstructorIngredient | null;
+  ingredients: TConstructorIngredient[];
+  isLoading: boolean;
+  hasError: string | null;
+}
 
-const initialState: TStateConstructor = {
+const initialState: ConstructorState = {
   bun: null,
-  ingredients: []
+  ingredients: [],
+  isLoading: false,
+  hasError: null
 };
 
-export const constructorSlice = createSlice({
+export const fetchIngredients = createAsyncThunk(
+  'constructor/fetchIngredients',
+  async () => {
+    const data = await getIngredientsApi();
+    return data;
+  }
+);
+
+const constructorSlice = createSlice({
   name: 'constructor',
   initialState,
   reducers: {
@@ -23,48 +41,64 @@ export const constructorSlice = createSlice({
           state.ingredients.push(action.payload);
         }
       },
-      prepare: (ingredient: TIngredient) => {
-        const key = nanoid();
-        return { payload: { ...ingredient, id: key } };
-      }
+      prepare: (ingredient: TIngredient) => ({
+        payload: {
+          ...ingredient,
+          uniqueId: nanoid(),
+          id: ingredient._id
+        }
+      })
     },
     removeIngredient: (state, action: PayloadAction<string>) => {
       state.ingredients = state.ingredients.filter(
-        (item) => item.id !== action.payload
+        (ingredient) => ingredient.id !== action.payload
       );
     },
-    moveUpIngredient: (state, action: PayloadAction<number>) => {
-      const index = action.payload;
-      if (index > 0) {
-        const ingredients = state.ingredients;
-        [ingredients[index - 1], ingredients[index]] = [
-          ingredients[index],
-          ingredients[index - 1]
-        ];
-      }
-    },
-    moveDownIngredient: (state, action: PayloadAction<number>) => {
-      const index = action.payload;
-      if (index < state.ingredients.length - 1) {
-        const ingredients = state.ingredients;
-        [ingredients[index + 1], ingredients[index]] = [
-          ingredients[index],
-          ingredients[index + 1]
-        ];
-      }
+    moveIngredient: (
+      state,
+      action: PayloadAction<{ fromIndex: number; toIndex: number }>
+    ) => {
+      const { fromIndex, toIndex } = action.payload;
+      const ingredients = [...state.ingredients];
+      const [movedIngredient] = ingredients.splice(fromIndex, 1);
+      ingredients.splice(toIndex, 0, movedIngredient);
+      state.ingredients = ingredients;
     },
     clearConstructor: (state) => {
       state.bun = null;
       state.ingredients = [];
+      state.hasError = null;
     }
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchIngredients.pending, (state) => {
+        state.isLoading = true;
+        state.hasError = null;
+      })
+      .addCase(
+        fetchIngredients.fulfilled,
+        (state, action: PayloadAction<TIngredient[]>) => {
+          state.isLoading = false;
+          state.ingredients = action.payload.map((ingredient) => ({
+            ...ingredient,
+            uniqueId: nanoid(),
+            id: ingredient._id
+          }));
+        }
+      )
+      .addCase(fetchIngredients.rejected, (state, action) => {
+        state.isLoading = false;
+        state.hasError =
+          action.error.message || 'Не удалось загрузить ингредиенты';
+      });
   }
 });
 
 export const {
   addIngredient,
   removeIngredient,
-  moveUpIngredient,
-  moveDownIngredient,
+  moveIngredient,
   clearConstructor
 } = constructorSlice.actions;
 

@@ -2,12 +2,17 @@ import { FC, useEffect, useMemo } from 'react';
 import { TConstructorIngredient } from '@utils-types';
 import { BurgerConstructorUI } from '@ui';
 import { RootState, useDispatch, useSelector } from '../../services/store';
+import { fetchIngredients } from '../../services/slices/constructorSlice';
 
 export const BurgerConstructor: FC = () => {
-  console.log('Burger constructor mounted:');
   /** TODO: взять переменные constructorItems, orderRequest и orderModalData из стора */
 
-  // Получаем данные из стора
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchIngredients());
+  }, [dispatch]);
+
   const bun = useSelector((state: RootState) => state.constructor.bun);
   const ingredients = useSelector(
     (state: RootState) => state.constructor.ingredients
@@ -16,17 +21,11 @@ export const BurgerConstructor: FC = () => {
   console.log(bun);
   console.log(ingredients);
 
-  const constructorState = useSelector((state: RootState) => state.constructor);
-
-  // Логирование состояния
-  console.log('Constructor State:', constructorState);
-
   const constructorItems = {
-    bun: constructorState.bun || { price: 0, name: '', image: '' },
-    ingredients: constructorState.ingredients || []
+    bun: bun || { price: 0, name: '', image: '' },
+    ingredients: ingredients || []
   };
 
-  // Проверка данных конструкторских элементов
   console.log('Constructor Items:', constructorItems);
 
   const orderRequest = false;
