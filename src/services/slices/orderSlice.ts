@@ -1,18 +1,33 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { TOrder } from '@utils-types';
-import { orderBurgerApi, getOrderByNumberApi } from '../../utils/burger-api';
+import {
+  orderBurgerApi,
+  getOrderByNumberApi,
+  getOrdersApi
+} from '../../utils/burger-api';
+import { RootState } from '../store';
 
 interface OrderState {
   currentOrder: TOrder | null;
+  userOrders: TOrder[];
   isLoading: boolean;
   error: string | null;
 }
 
 const initialState: OrderState = {
   currentOrder: null,
+  userOrders: [],
   isLoading: false,
   error: null
 };
+
+export const fetchUserOrders = createAsyncThunk(
+  'order/fetchUserOrders',
+  async () => {
+    const orders = await getOrdersApi();
+    return orders;
+  }
+);
 
 export const fetchOrderByNumber = createAsyncThunk(
   'order/fetchOrderByNumber',
@@ -41,6 +56,22 @@ const orderSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      .addCase(fetchUserOrders.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(
+        fetchUserOrders.fulfilled,
+        (state, action: PayloadAction<TOrder[]>) => {
+          state.isLoading = false;
+          state.userOrders = action.payload;
+        }
+      )
+      .addCase(fetchUserOrders.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error =
+          action.error.message || 'Не удалось получить заказы пользователя';
+      })
       .addCase(fetchOrderByNumber.pending, (state) => {
         state.isLoading = true;
         state.error = null;

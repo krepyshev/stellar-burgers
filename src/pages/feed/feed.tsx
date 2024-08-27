@@ -10,8 +10,6 @@ export const Feed: FC = () => {
   const dispatch = useDispatch();
   const orders: TOrder[] = useSelector((state) => state.feed.orders);
 
-  console.log('orders from feed', orders);
-
   useEffect(() => {
     dispatch(fetchFeeds());
     dispatch(fetchIngredients());

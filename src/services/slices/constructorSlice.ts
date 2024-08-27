@@ -67,6 +67,10 @@ const constructorSlice = createSlice({
       state.bun = null;
       state.ingredients = [];
       state.hasError = null;
+    },
+    loadSavedConstructor: (state, action: PayloadAction<ConstructorState>) => {
+      state.bun = action.payload.bun;
+      state.ingredients = action.payload.ingredients;
     }
   },
   extraReducers: (builder) => {
@@ -97,7 +101,8 @@ export const {
   addIngredient,
   removeIngredient,
   moveIngredient,
-  clearConstructor
+  clearConstructor,
+  loadSavedConstructor
 } = constructorSlice.actions;
 
 export default constructorSlice.reducer;
