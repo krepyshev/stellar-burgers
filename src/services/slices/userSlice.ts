@@ -153,7 +153,6 @@ const userSlice = createSlice({
         state.isAuthenticated = false;
         state.user = null;
         state.accessToken = null;
-        state.isAuthChecked = true;
       })
       .addCase(updateUser.fulfilled, (state, action) => {
         state.user = action.payload;

@@ -3,8 +3,12 @@ import { Preloader } from '../ui/preloader';
 import { OrderInfoUI } from '../ui/order-info';
 import { TIngredient } from '@utils-types';
 import { RootState, useDispatch, useSelector } from '../../services/store';
-import { fetchOrderByNumber } from '../../services/slices/orderSlice';
+import {
+  fetchOrderByNumber,
+  fetchUserOrders
+} from '../../services/slices/orderSlice';
 import { useParams } from 'react-router-dom';
+import { fetchIngredients } from '../../services/slices/ingredientsSlice';
 
 export const OrderInfo: FC = () => {
   const { number: orderNumber } = useParams<{ number: string }>();
@@ -14,6 +18,10 @@ export const OrderInfo: FC = () => {
   const ingredients = useSelector(
     (state: RootState) => state.ingredients.items
   );
+
+  useEffect(() => {
+    dispatch(fetchIngredients());
+  }, [dispatch]);
 
   useEffect(() => {
     if (orderNumber) {

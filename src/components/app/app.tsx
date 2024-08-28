@@ -24,7 +24,11 @@ const App = () => {
   const navigate = useNavigate();
 
   const closeModal = () => {
-    navigate(-1);
+    if (background) {
+      navigate(-1);
+    } else {
+      navigate('/');
+    }
   };
 
   const dispatch = useDispatch();
@@ -112,7 +116,7 @@ const App = () => {
         <Route
           path='/ingredients/:id'
           element={
-            <Modal title={'Ингредиент'} onClose={closeModal}>
+            <Modal title='Ингредиент' onClose={closeModal}>
               <IngredientDetails />
             </Modal>
           }
@@ -139,7 +143,7 @@ const App = () => {
           <Route
             path='/ingredients/:id'
             element={
-              <Modal title={'Ингредиент'} onClose={closeModal}>
+              <Modal title='Ингредиент' onClose={closeModal}>
                 <IngredientDetails />
               </Modal>
             }

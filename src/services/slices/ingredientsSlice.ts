@@ -16,15 +16,11 @@ const initialState: IngredientState = {
   hasError: false
 };
 
-export const fetchIngredients = createAsyncThunk<TIngredient[], void>(
+export const fetchIngredients = createAsyncThunk<TIngredient[]>(
   'ingredients/fetchIngredients',
-  async (_, { rejectWithValue }) => {
-    try {
-      const ingredients = await getIngredientsApi();
-      return ingredients;
-    } catch (err) {
-      return rejectWithValue(err);
-    }
+  async () => {
+    const ingredients = await getIngredientsApi();
+    return ingredients;
   }
 );
 

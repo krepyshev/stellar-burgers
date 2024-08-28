@@ -23,7 +23,7 @@ export const BurgerConstructor: FC = () => {
 
   const navigate = useNavigate();
 
-  const isAuthChecked = useSelector((state) => state.user.isAuthChecked);
+  const isAuthChecked = useSelector((state) => state.user.isAuthenticated);
 
   const constructorItems = useSelector(
     (state: RootState) => state.burgerConstructor
@@ -32,8 +32,6 @@ export const BurgerConstructor: FC = () => {
   const order = useSelector((state: RootState) => state.order);
   const orderRequest = order.isLoading;
   const orderModalData = order.currentOrder;
-
-  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const onOrderClick = () => {
     if (!isAuthChecked) {
@@ -50,16 +48,20 @@ export const BurgerConstructor: FC = () => {
       ...constructorItems.ingredients.map((ingredient) => ingredient._id),
       constructorItems.bun._id
     ];
-
     dispatch(createOrder(ingredientIds));
-    setIsModalOpen(true);
   };
 
   const closeOrderModal = () => {
     dispatch(clearOrder());
     dispatch(clearConstructor());
-    setIsModalOpen(false);
   };
+
+  useEffect(
+    () => () => {
+      dispatch(clearOrder());
+    },
+    [dispatch]
+  );
 
   const price = useMemo(
     () =>
