@@ -21,7 +21,7 @@ const ProtectedRoute = ({
   }
 
   if (onlyUnAuth && user) {
-    return <Navigate replace to='/profile' />;
+    return <Navigate replace to='/' />;
   }
 
   if (!onlyUnAuth && !user) {

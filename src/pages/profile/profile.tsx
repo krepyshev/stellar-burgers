@@ -40,7 +40,7 @@ export const Profile: FC = () => {
     try {
       await dispatch(updateUser(formValue)).unwrap();
     } catch (error) {
-      console.error('Failed to update profile:', error);
+      console.error(error);
     }
   };
 

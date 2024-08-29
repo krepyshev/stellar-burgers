@@ -20,7 +20,7 @@ export const Register: FC = () => {
         navigate('/');
       })
       .catch((error) => {
-        console.error('Ошибка при регистрации:', error);
+        console.error(error);
       });
   };
 

@@ -1,4 +1,10 @@
-import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
+import {
+  Routes,
+  Route,
+  useLocation,
+  useNavigate,
+  useParams
+} from 'react-router-dom';
 import {
   ConstructorPage,
   Feed,
@@ -96,38 +102,17 @@ const App = () => {
 
         <Route path='*' element={<NotFound404 />} />
 
-        <Route
-          path='/feed/:number'
-          element={
-            <Modal title='Заказ' onClose={closeModal}>
-              <OrderInfo />
-            </Modal>
-          }
-        />
-        <Route
-          path='/profile/orders/:number'
-          element={
-            <Modal title='Заказ' onClose={closeModal}>
-              <OrderInfo />
-            </Modal>
-          }
-        />
-
-        <Route
-          path='/ingredients/:id'
-          element={
-            <Modal title='Ингредиент' onClose={closeModal}>
-              <IngredientDetails />
-            </Modal>
-          }
-        />
+        <Route path='/feed/:number' element={<OrderInfo />} />
+        <Route path='/profile/orders/:number' element={<OrderInfo />} />
+        <Route path='/ingredients/:id' element={<IngredientDetails />} />
       </Routes>
+
       {background && (
         <Routes>
           <Route
             path='/feed/:number'
             element={
-              <Modal title='Заказ' onClose={closeModal}>
+              <Modal title='' onClose={closeModal}>
                 <OrderInfo />
               </Modal>
             }
@@ -135,7 +120,7 @@ const App = () => {
           <Route
             path='/profile/orders/:number'
             element={
-              <Modal title='Заказ' onClose={closeModal}>
+              <Modal title='' onClose={closeModal}>
                 <OrderInfo />
               </Modal>
             }
@@ -143,7 +128,7 @@ const App = () => {
           <Route
             path='/ingredients/:id'
             element={
-              <Modal title='Ингредиент' onClose={closeModal}>
+              <Modal title='Детали ингредиента' onClose={closeModal}>
                 <IngredientDetails />
               </Modal>
             }
