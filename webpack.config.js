@@ -86,6 +86,12 @@ module.exports = {
     filename: 'bundle.js'
   },
   devServer: {
+    proxy: {
+      '/api': {
+        target: 'https://norma.nomoreparties.space',
+        changeOrigin: true
+      }
+    },
     static: path.join(__dirname, './dist'),
     compress: true,
     historyApiFallback: true,
