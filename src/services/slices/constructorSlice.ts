@@ -7,7 +7,7 @@ import {
 import { TIngredient, TConstructorIngredient } from '@utils-types';
 import { getIngredientsApi } from '@api';
 
-interface ConstructorState {
+export interface ConstructorState {
   bun: TConstructorIngredient | null;
   ingredients: TConstructorIngredient[];
   isLoading: boolean;

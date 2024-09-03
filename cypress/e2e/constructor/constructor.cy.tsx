@@ -37,7 +37,7 @@ describe('Burger Constructor', () => {
     cy.get('[data-cy="modal"]').should('not.exist');
   });
 
-  it('должен создаваться заказ', () => {
+  it('должен создаться заказ, открыться и закрыться модальное окно с проверкой номера заказа, очиститься конструктор', () => {
     cy.intercept('POST', 'api/orders', {
       fixture: 'orders.json'
     }).as('createOrder');
