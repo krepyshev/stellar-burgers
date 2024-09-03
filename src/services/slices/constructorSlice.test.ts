@@ -1,4 +1,5 @@
 import { TConstructorIngredient } from '@utils-types';
+import { initialState } from './constructorSlice';
 
 const mockBun: TConstructorIngredient = {
   _id: 'bun1',
@@ -34,18 +35,10 @@ import reducer, {
   addIngredient,
   removeIngredient,
   moveIngredient,
-  clearConstructor,
-  ConstructorState
+  clearConstructor
 } from './constructorSlice';
 
 describe('constructorSlice', () => {
-  const initialState: ConstructorState = {
-    bun: null,
-    ingredients: [],
-    isLoading: false,
-    hasError: null
-  };
-
   it('должен корректно обрабатывать добавление ингредиента', () => {
     const previousState = { ...initialState };
     const expectedState = {

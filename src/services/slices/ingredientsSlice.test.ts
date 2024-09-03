@@ -1,14 +1,7 @@
-import reducer, { fetchIngredients } from './ingredientsSlice';
+import reducer, { fetchIngredients, initialState } from './ingredientsSlice';
 import { TIngredient } from '@utils-types';
 
 describe('ingredientsSlice', () => {
-  const initialState = {
-    items: [],
-    currentIngredient: null,
-    isLoading: false,
-    hasError: false
-  };
-
   it('должен изменять isLoading на true при выполнении fetchIngredients.pending', () => {
     const action = { type: fetchIngredients.pending.type };
     const state = reducer(initialState, action);

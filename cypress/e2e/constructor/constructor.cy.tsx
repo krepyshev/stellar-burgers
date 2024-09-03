@@ -1,5 +1,16 @@
 /// <reference types="cypress" />
 
+const selectors = {
+  ingredientBun: '[data-cy="ingredient-bun"]',
+  ingredient: '[data-cy="ingredient"]',
+  constructorBun: '[data-cy="constructor-bun"]',
+  constructorIngredient: '[data-cy="constructor-ingredient"]',
+  orderButton: '[data-cy="order-button"]',
+  modal: '[data-cy="modal"]',
+  modalClose: '[data-cy="modal-close"]',
+  orderNumber: '[data-cy="order-number"]'
+};
+
 describe('Burger Constructor', () => {
   beforeEach(() => {
     cy.intercept('GET', 'api/ingredients', {
@@ -24,17 +35,17 @@ describe('Burger Constructor', () => {
   });
 
   it('должна добавиться булка и ингредиент в конструктор', () => {
-    cy.get('[data-cy="ingredient-bun"]').first().contains('Добавить').click();
-    cy.get('[data-cy="constructor-bun"]').should('exist');
-    cy.get('[data-cy="ingredient"]').first().contains('Добавить').click();
-    cy.get('[data-cy="constructor-ingredient"]').should('have.length', 1);
+    cy.get(selectors.ingredientBun).first().contains('Добавить').click();
+    cy.get(selectors.constructorBun).should('exist');
+    cy.get(selectors.ingredient).first().contains('Добавить').click();
+    cy.get(selectors.constructorIngredient).should('have.length', 1);
   });
 
   it('должно открыться и закрыться модальное окно с деталями ингредиента', () => {
-    cy.get('[data-cy="ingredient"]').first().click();
-    cy.get('[data-cy="modal"]').should('be.visible');
-    cy.get('[data-cy="modal-close"]').click();
-    cy.get('[data-cy="modal"]').should('not.exist');
+    cy.get(selectors.ingredient).first().click();
+    cy.get(selectors.modal).should('be.visible');
+    cy.get(selectors.modalClose).click();
+    cy.get(selectors.modal).should('not.exist');
   });
 
   it('должен создаться заказ, открыться и закрыться модальное окно с проверкой номера заказа, очиститься конструктор', () => {
@@ -42,16 +53,16 @@ describe('Burger Constructor', () => {
       fixture: 'orders.json'
     }).as('createOrder');
 
-    cy.get('[data-cy="ingredient-bun"]').first().contains('Добавить').click();
-    cy.get('[data-cy="ingredient"]').first().contains('Добавить').click();
-    cy.get('[data-cy="order-button"]').click();
+    cy.get(selectors.ingredientBun).first().contains('Добавить').click();
+    cy.get(selectors.ingredient).first().contains('Добавить').click();
+    cy.get(selectors.orderButton).click();
     cy.wait('@createOrder');
 
-    cy.get('[data-cy="modal"]').should('be.visible');
-    cy.get('[data-cy="order-number"]').should('contain', '12345');
-    cy.get('[data-cy="modal-close"]').click();
+    cy.get(selectors.modal).should('be.visible');
+    cy.get(selectors.orderNumber).should('contain', '12345');
+    cy.get(selectors.modalClose).click();
 
-    cy.get('[data-cy="constructor-ingredient"]').should('have.length', 0);
-    cy.get('[data-cy="constructor-bun"]').should('not.exist');
+    cy.get(selectors.constructorIngredient).should('have.length', 0);
+    cy.get(selectors.constructorBun).should('not.exist');
   });
 });

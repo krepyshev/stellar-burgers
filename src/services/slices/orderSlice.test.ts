@@ -1,14 +1,7 @@
-import reducer, { fetchUserOrders } from './orderSlice';
+import reducer, { fetchUserOrders, initialState } from './orderSlice';
 import { TOrder } from '@utils-types';
 
 describe('orderSlice', () => {
-  const initialState = {
-    currentOrder: null,
-    userOrders: [],
-    isLoading: false,
-    error: null
-  };
-
   it('должен изменять isLoading на true при выполнении fetchUserOrders.pending', () => {
     const action = { type: fetchUserOrders.pending.type };
     const state = reducer(initialState, action);

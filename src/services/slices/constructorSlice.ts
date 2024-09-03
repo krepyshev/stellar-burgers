@@ -7,14 +7,14 @@ import {
 import { TIngredient, TConstructorIngredient } from '@utils-types';
 import { getIngredientsApi } from '@api';
 
-export interface ConstructorState {
+interface ConstructorState {
   bun: TConstructorIngredient | null;
   ingredients: TConstructorIngredient[];
   isLoading: boolean;
   hasError: string | null;
 }
 
-const initialState: ConstructorState = {
+export const initialState: ConstructorState = {
   bun: null,
   ingredients: [],
   isLoading: false,

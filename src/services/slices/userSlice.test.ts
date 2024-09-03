@@ -1,15 +1,6 @@
-import reducer, { loginUser } from './userSlice';
+import reducer, { loginUser, initialState } from './userSlice';
 
 describe('userSlice', () => {
-  const initialState = {
-    isAuthenticated: false,
-    isAuthChecked: false,
-    user: null,
-    accessToken: null,
-    loginUserRequest: false,
-    loginUserError: null
-  };
-
   it('должен изменять loginUserRequest на true при выполнении loginUser.pending', () => {
     const action = { type: loginUser.pending.type };
     const state = reducer(initialState, action);
