@@ -14,7 +14,7 @@ interface ConstructorState {
   hasError: string | null;
 }
 
-const initialState: ConstructorState = {
+export const initialState: ConstructorState = {
   bun: null,
   ingredients: [],
   isLoading: false,
